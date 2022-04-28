@@ -5,9 +5,9 @@ import './game.css';
 
 function Square(props){
     return (
-        <Button className={props.className}
+        <Button className={`${props.className['sq']} ${props.className['win']}`}
                 onClick={props.onClick}
-                style={{backgroundColor : props.backgroundColor}}>
+                style={props.squareStyle}>
             <span>{props.value}</span>
         </Button>
     );
@@ -16,14 +16,14 @@ function Square(props){
 class Board extends React.Component {
     renderSquare(i) {
         const winLines = this.props.winLines ? this.props.winLines : []; 
-        
+
         return (
             <Square 
                 value={this.props.squares[i]}
-                className={this.props.squares[i] ? (this.props.squares[i] === 'Black' ? 'square activeB' : 'square activeW') : 'square' }
+                className={{sq: this.props.squares[i] ? (this.props.squares[i] === 'Black' ? 'square activeB' : 'square activeW') : 'square', win: winLines.indexOf(i) > -1 ? 'win' : 'plain' }}
                 onClick={()=>this.props.onClick(i)}
                 key={i}
-                backgroundColor={winLines.indexOf(i) > -1 ? 'red !important' : 'white'}
+                
         />
     );
   }

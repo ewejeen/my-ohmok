@@ -118,6 +118,8 @@ class Game extends React.Component {
     }
     
     render() {
+        document.title = '오목하기';
+
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares) ? calculateWinner(current.squares).winner : null;

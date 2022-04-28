@@ -7,6 +7,6 @@ html, body {
 .wrap{
   display: flex;
   width:100vw;
-  height:100vh;
+  height:70vh;
   background-color: #feffff;
 }

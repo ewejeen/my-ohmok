@@ -1,6 +1,6 @@
 import React from 'react';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
+import { Box, Button } from '@material-ui/core';
+import Menu from './topMenu';
 import './game.css';
 
 function Square(props){
@@ -156,6 +156,8 @@ class Game extends React.Component {
         }
         
         return (
+            <>
+            <Menu />
             <div className="wrap">
                 <div className="game">
                     <Box className="game-title">
@@ -182,6 +184,7 @@ class Game extends React.Component {
                     </div>
                 </div>
             </div>
+            </>
         );
     }
 }

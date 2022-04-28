@@ -1,12 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import Menu from './topMenu';
 import './login.css';
-import {Link} from 'react-router-dom';
 
 class Login extends React.Component {
     render(){
         document.title = '로그인';
 
         return (
+            <>
+            <Menu />
             <div className="wrap">
                 <div className="login">
                     Login
@@ -16,7 +19,7 @@ class Login extends React.Component {
                     </ul>
                 </div>
             </div>
-            
+            </>
             );
     }
 }

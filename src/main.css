@@ -1,6 +1,7 @@
 .main {
   width: 70%;
   height: 70%;
-  border: 1px solid;
+  background: skyblue;
+  border-radius: 50px;
   margin: auto; 
 }

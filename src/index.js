@@ -9,9 +9,9 @@ import Login from './login';
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
-            <Route path="/" element={<Main />}></Route>
-            <Route path="/game" element={<Game />}></Route>
-            <Route path="/login" element={<Login />}></Route>
+            <Route exact path="/" element={<Main />}></Route>
+            <Route exact path="/game" element={<Game />}></Route>
+            <Route exact path="/login" element={<Login />}></Route>
         </Routes>
     </BrowserRouter>,
     document.getElementById('root')

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box } from '@material-ui/core';
+import { Box, Typography, Button } from '@material-ui/core';
 import Menu from './topMenu';
 import './main.css';
 
@@ -12,16 +12,16 @@ class Main extends React.Component {
             <>
             <Menu />
             <div className="wrap">
-                    <Box className="main">
-                        메인
-                        <ul>
-                            <Link to="/game"><li>게임하기</li></Link>
-                            <Link to="/login"><li>로그인</li></Link>
-                        </ul>
-                    </Box>
-                </div></>
-            
-            );
+                <Box className="main">
+                    <div style={{margin: '10% auto'}}>
+                        <Typography variant="h2" align="center" color="textPrimary" style={{marginTop: '150px', fontWeight: 'bold', fontStyle: 'italic'}}>MY-OHMOK</Typography>
+                        <Link to='/login'>
+                            <Button variant="contained" size="large" style={{margin: '50px auto', display: 'block', background: 'navy', color: 'white'}}>LOGIN</Button>
+                        </Link>
+                    </div>
+                </Box>
+            </div></>
+        );
     }
 }
 

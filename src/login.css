@@ -1,6 +1,7 @@
 .login {
-  width: 70%;
+  width: 50%;
   height: 70%;
-  border: 1px solid;
+  background: skyblue;
+  border-radius: 50px;
   margin: auto; 
 }

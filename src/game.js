@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Button } from '@material-ui/core';
 import Menu from './topMenu';
 import './game.css';
+import { useLocation } from 'react-router-dom';
 
 function Square(props){
     return (
@@ -10,6 +11,7 @@ function Square(props){
                 style={props.squareStyle}>
             <span>{props.value}</span>
         </Button>
+        
     );
 }
   
@@ -47,6 +49,38 @@ class Board extends React.Component {
   }
 }
 
+// 매 단계 히스토리 버튼
+const StepButtons = (props) => {
+    return (
+        <Button style={{fontWeight : props.selected === props.move ? 'bold' : 'normal', color : props.move ? 'black' : 'blue'}} 
+                onClick={() => {this.jumpTo(props.move)}}>{props.desc}</Button>
+    )
+}
+
+// 승자표시
+const StatusInfo = (props) => {    
+    const location = useLocation();
+    const p1 = location.state ? location.state.player1 : 'Black';
+    const p2 = location.state ? location.state.player2 : 'White';
+
+    let status;
+    if(props.winner){
+        status = 'Winner: ' + (props.winner === 'Black' ? p1 : p2);
+    } else{
+        if(props.isFinished === 'Y'){
+            status = 'DRAW';
+        } else{
+            status = 'Next player: ' + (props.xIsNext ? p1 : p2);
+        }
+    }
+
+    return (
+        <div className="status-info">{status}</div>
+    );
+}
+
+
+// 게임 (최상위)
 class Game extends React.Component {
     constructor(props){
         super(props);
@@ -135,7 +169,7 @@ class Game extends React.Component {
            
             return (
                 <li key={move}>
-                    <Button style={{fontWeight : this.state.selected === move ? 'bold' : 'normal', color : move ? 'black' : 'blue'}} onClick={() => {this.jumpTo(move)}}>{desc}</Button>
+                    <StepButtons desc={desc} move={move} selected={this.state.selected}/>
                 </li>
             );
         });
@@ -144,17 +178,6 @@ class Game extends React.Component {
             moves.reverse();
         }
 
-        let status;
-        if(winner){
-            status = 'Winner: ' + winner;
-        } else{
-            if(this.state.isFinished === 'Y'){
-                status = 'DRAW';
-            } else{
-                status = 'Next player: ' + (this.state.xIsNext ? 'Black' : 'White');
-            }
-        }
-        
         return (
             <>
             <Menu />
@@ -172,7 +195,8 @@ class Game extends React.Component {
                             />
                         </div>
                         <div className="game-info">
-                            <div className="status-info">{status}</div>
+                            <StatusInfo xIsNext={this.state.xIsNext} isFinished={this.state.isFinished} winner={winner} />
+                            
                             <div className="move-info">
                                 <ol>{moves}</ol>
                             </div>

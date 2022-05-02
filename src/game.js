@@ -49,14 +49,6 @@ class Board extends React.Component {
   }
 }
 
-// 매 단계 히스토리 버튼
-const StepButtons = (props) => {
-    return (
-        <Button style={{fontWeight : props.selected === props.move ? 'bold' : 'normal', color : props.move ? 'black' : 'blue'}} 
-                onClick={() => {this.jumpTo(props.move)}}>{props.desc}</Button>
-    )
-}
-
 // 승자표시
 const StatusInfo = (props) => {    
     const location = useLocation();
@@ -100,9 +92,10 @@ class Game extends React.Component {
         const current = history[history.length - 1];
         const squares = current.squares.slice();
 
-        if(calculateWinner(squares) || squares[i]){
+        if(calculateWinner(squares, this.state.xIsNext ? 'Black' : 'White', i) || squares[i]){
             return ;
         }
+
         squares[i] = this.state.xIsNext ? 'Black' : 'White';
         
         this.setState({
@@ -156,8 +149,8 @@ class Game extends React.Component {
 
         const history = this.state.history;
         const current = history[this.state.stepNumber];
-        const winner = calculateWinner(current.squares) ? calculateWinner(current.squares).winner : null;
-        const winLines = calculateWinner(current.squares) ? calculateWinner(current.squares).lines : null;
+        const winner = calculateWinner(current.squares, this.state.xIsNext ? 'Black' : 'White', this.state.selectedSquare ? 'Black' : 'White') ? calculateWinner(current.squares, this.state.xIsNext ? 'Black' : 'White', this.state.selectedSquare).winner : null;
+        const winLines = calculateWinner(current.squares, this.state.xIsNext ? 'Black' : 'White', this.state.selectedSquare ? 'Black' : 'White') ? calculateWinner(current.squares, this.state.xIsNext ? 'Black' : 'White', this.state.selectedSquare).lines : null;
         
         const moves = history.map((step, move) => {
             const selSquare = step.selectedSquare;
@@ -169,7 +162,8 @@ class Game extends React.Component {
            
             return (
                 <li key={move}>
-                    <StepButtons desc={desc} move={move} selected={this.state.selected}/>
+                    <Button style={{fontWeight : this.state.selected === move ? 'bold' : 'normal', color : move ? 'black' : 'blue'}} 
+                            onClick={() => {this.jumpTo(move)}}>{desc}</Button>
                 </li>
             );
         });
@@ -215,35 +209,59 @@ class Game extends React.Component {
 
 // ========================================
 
-/*
-ReactDOM.render(
-  <Game />,
-  document.getElementById('root')
-);
-*/
 
-function calculateWinner(squares) {
-    const lines = [
-      [0, 1, 2, 3, 4],
-      [5, 6, 7, 8, 9],
-      [10, 11, 12, 13, 14],
-      [15, 16, 17, 18, 19],
-      [20, 21, 22, 23, 24],
-      [0, 5, 10, 15, 20],
-      [1, 6, 11, 16, 21],
-      [2, 7, 12, 17, 22],
-      [3, 8, 13, 18, 23],
-      [4, 9, 14, 19, 24],
-      [0, 6, 12, 18, 24],
-      [4, 8, 12, 16, 20],
-    ];
+// 우승 조건 계산
+function calculateWinner(squares, xIsNext, selectedSquare) {
+    const widthCnt = parseInt(Math.sqrt(squares.length));
+
+    // 우승조건 lines
+    const lines = [];
+
+    // 배열이 배열을 포함하는지 여부
+    const includesArray = (data, arr) => {
+        return data.some(e => Array.isArray(e) && e.every((o, i) => Object.is(arr[i], o)));
+    }
+
+    // lines 계산
+    for(let i = 0; i < squares.length; i++){
+        for(let j = 0; j < widthCnt; j++){
+            const mx = widthCnt - 1;
+
+            // 가로줄
+            if(i % widthCnt === 0){
+                let winObj = [i, (i + (mx - 3)), (i + (mx - 2)), (i + (mx - 1)), (i + mx)];
+                if(!includesArray(lines, winObj)) lines.push(winObj);
+            }
+            
+            // 세로줄
+            if(i < widthCnt){
+                let winObj = [i, (i + widthCnt), (i + (widthCnt * 2)), (i + (widthCnt * 3)), (i + (widthCnt * 4))];
+                if(!includesArray(lines, winObj)) lines.push(winObj);
+            }
+
+            // 대각선 우하향
+            if((i + (widthCnt * mx) + mx) < squares.length){
+                let winObj = [i, (i + (widthCnt * (mx - 3)) + (mx - 3)), (i + (widthCnt * (mx - 2)) + (mx - 2)), (i + (widthCnt * (mx - 1)) + (mx - 1)), (i + (widthCnt * mx) + mx)];
+                if(!includesArray(lines, winObj)) lines.push(winObj);
+            }
+
+            // 대각선 좌하향
+            if(i === (squares.length - widthCnt)){
+               let winObj = [i, (i - (widthCnt * (mx - 3)) + (mx - 3)), (i - (widthCnt * (mx - 2)) + (mx - 2)), (i - (widthCnt * (mx - 1)) + (mx - 1)), (i - (widthCnt * mx) + mx)];
+               if(!includesArray(lines, winObj)) lines.push(winObj);
+            }
+        }
+    }
     
+    // 우승 조건 계산해서 return
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c, d, e] = lines[i];
+
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d] && squares[a] === squares[e]) {
         return {lines: lines[i], winner: squares[a]};
       }
     }
+
     return null;
   }
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button } from '@material-ui/core';
 import Menu from './topMenu';
 import './game.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // 각 사각형 렌더
 function Square(props){
@@ -78,18 +78,6 @@ const StatusInfo = (props) => {
 
 // 게임 (최상위)
 function Game(props){
-    /*constructor(props){
-        super(props);
-        this.state = {
-            history: [{
-                squares: Array(100).fill(null),
-            }],
-            stepNumber: 0,
-            xIsNext: true,
-            selected: null,
-            isAscending: true,
-        };
-    }*/
     const location = useLocation();
     const level = location.state ? location.state.level : 5; // 로그인 화면에서 선택한 레벨
     const squareSize = level ? parseInt(level) * parseInt(level) : 25;
@@ -102,7 +90,6 @@ function Game(props){
     const [selected, setSelected] = useState(null);
     const [isAscending, setIsAscending] = useState(true);
     const [isFinished, setIsFinished] = useState('N');
-
 
     const handleClick = (i) => {
         const sHistory = history.slice(0, stepNumber + 1);
@@ -129,6 +116,17 @@ function Game(props){
         setStepNumber(step);
         setXIsNext((step%2) === 0);
         setSelected(step);
+    }
+
+    const restart = (squareSize) => {
+        setHistory([{
+            squares: Array(squareSize).fill(null),
+        }]);
+        setStepNumber(0);
+        setXIsNext(true);
+        setSelected(null);
+        setIsAscending(true);
+        setIsFinished('N');
     }
 
     const changeOrder = () => {
@@ -208,7 +206,7 @@ function Game(props){
                         </div>
                         <div className="menu-info">
                             <Button className="menu-btn" onClick={() => changeOrder()}>{isAscending ? '▼ DESC (NOW: ASC)' : '▲ ASC (NOW: DESC)'}</Button>
-                            <Button className="menu-btn">RESTART</Button>
+                            <Button className="menu-btn" onClick={() => restart(current.squares.length)}>RESTART</Button>
                         </div>
                     </div>
                 </div>

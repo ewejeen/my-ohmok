@@ -76,6 +76,19 @@ ol, ul {
   background: #76a9b8 !important;
 }
 
+.board-row.h5{
+  height: 20%;
+}
+.board-row.h10{
+  height: 10%;
+}
+.board-row.h15{
+  height: 6.66%;
+}
+.board-row.h20{
+  height: 5%;
+}
+
 .status {
   margin-bottom: 10px;
 }
@@ -87,10 +100,23 @@ ol, ul {
   font-weight: bold !important;
   min-width:0 !important;
   min-height:0 !important;
-  width: 10%;
   height: 100%;
   text-align: center;
 }
+
+.square.w5{
+  width: 20%;
+}
+.square.w10{
+  width: 10%;
+}
+.square.w15{
+  width: 6.66%;
+}
+.square.w20{
+  width: 5%;
+}
+
 .square.activeB span{
   background:black !important;
   width: 80%;

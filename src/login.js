@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Typography, Button, Box, TextField } from '@material-ui/core';
+import { Typography, Button, Box, TextField, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
 
 import Menu from './topMenu';
 import './login.css';
@@ -12,6 +12,7 @@ class Login extends React.Component {
         this.state = {
             player1: '',
             player2: '',
+            level: 5,
         };
     }
 
@@ -20,6 +21,13 @@ class Login extends React.Component {
             player1: id === 1 ? e.target.value : this.state.player1,
             player2: id === 2 ? e.target.value : this.state.player2,
         });
+    }
+
+    handleLevelChange(e){
+        console.log(e.target.value)
+        this.setState({
+            level: e.target.value
+        })
     }
 
     showAlert(e){
@@ -49,18 +57,31 @@ class Login extends React.Component {
             <Menu />
             <div className="wrap">
                 <Box className="login">
-                    <div style={{margin: '10% auto'}}>
-                        <Typography variant="h2" align="center" color="textPrimary" style={{marginTop: '120px', fontWeight: 'bold', fontStyle: 'italic'}}>LOGIN</Typography>
-                        <Typography variant="h5" align="center" color="textPrimary" style={{marginTop: '25px', fontWeight: 'bold', fontStyle: 'italic'}}>Enter names to play.</Typography>
+                    <div style={{margin: '7% auto'}}>
+                        <Typography variant="h2" align="center" color="textPrimary" style={{marginTop: '60px', fontWeight: 'bold', fontStyle: 'italic'}}>LOGIN</Typography>
+                        <Typography variant="h5" align="center" color="textPrimary" style={{marginTop: '25px', fontWeight: 'bold', fontStyle: 'italic'}}>Enter names and select level to play.</Typography>
                         <Box style={{textAlign: 'center', marginTop: '10px'}}>
                             <TextField label="Player 1" error={!this.state.player1 ? true : false} style={{display: 'inline-block', textAlign: 'center', height:'30px'}} onBlur={(e, id)=>this.handlePlayerNameChange(e, 1)}></TextField>
+                            <TextField label="Player 2" error={!this.state.player2 ? true : false} style={{display: 'inline-block', textAlign: 'center', height:'30px', marginLeft:'20px'}} onBlur={(e, id)=>this.handlePlayerNameChange(e, 2)}></TextField>
                         </Box>
-                        <Box style={{textAlign: 'center', marginTop: '20px'}}>
-                            <TextField label="Player 2" error={!this.state.player2 ? true : false} style={{display: 'inline-block', textAlign: 'center', height:'30px'}} onBlur={(e, id)=>this.handlePlayerNameChange(e, 2)}></TextField>
+                        <Box style={{textAlign: 'center', marginTop: '50px'}}>
+                            <FormControl variant="standard" sx={{ minWidth: 200, width: 300 }}>
+                                <InputLabel id="levelLabel">Level</InputLabel>
+                                <Select labelId="levelLabel" id="levelSelect" style={{width: '100px'}}
+                                    value={this.state.level ? this.state.level : 5}
+                                    onChange={(e)=>this.handleLevelChange(e)} label="Level">
+                                    <MenuItem value={5} >5 x 5</MenuItem>
+                                    <MenuItem value={10}>10 x 10</MenuItem>
+                                    <MenuItem value={15}>15 x 15</MenuItem>
+                                    <MenuItem value={20}>20 x 20</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Box>
-                        <Link to="/game" onClick={(e) => this.showAlert(e)} state={{player1: this.state.player1, player2: this.state.player2}}>
-                            <Button variant="contained" size="large" style={{margin: '50px auto', display: 'block', background: 'navy', color: 'white'}}>PLAY</Button>
-                        </Link>
+                        <Box style={{textAlign: 'center', marginTop: '50px'}}>
+                            <Link to="/game" onClick={(e) => this.showAlert(e)} state={{player1: this.state.player1, player2: this.state.player2, level: this.state.level}} style={{display: 'block', width: '200px', margin: '0 auto'}}>
+                                <Button variant="contained" size="large" style={{margin: '40px auto', display: 'block', background: 'navy', color: 'white', width: '100%'}}>PLAY</Button>
+                            </Link>
+                        </Box>
                     </div>
                 </Box>
             </div></>

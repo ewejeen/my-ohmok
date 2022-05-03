@@ -9,7 +9,7 @@ function Square(props){
         <Button className={`${props.className['sq']} ${props.className['win']}`}
                 onClick={props.onClick}
                 style={props.squareStyle}>
-            <span>{props.value}</span>
+            <span></span>
         </Button>
         
     );
@@ -33,10 +33,10 @@ class Board extends React.Component {
   render() {
     const row = [];
     let key = 0;
-    for(let i=0;i<5;i++){
+    for(let i=0;i<10;i++){
         const col = [];
-        for(let j=0;j<5;j++){
-            col.push(this.renderSquare((5 * i) + j));
+        for(let j=0;j<10;j++){
+            col.push(this.renderSquare((10 * i) + j));
             
             key++;
         }
@@ -44,7 +44,7 @@ class Board extends React.Component {
     }
 
     return (
-      <div>{row}</div>
+      <div style={{height:'100%'}}>{row}</div>
     );
   }
 }
@@ -78,7 +78,7 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
-                squares: Array(25).fill(null),
+                squares: Array(100).fill(null),
             }],
             stepNumber: 0,
             xIsNext: true,
@@ -106,7 +106,7 @@ class Game extends React.Component {
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
-            isFinished: history.length === 25 ? 'Y' : 'N',
+            isFinished: history.length === 100 ? 'Y' : 'N',
         });
     }
 
@@ -125,8 +125,8 @@ class Game extends React.Component {
     }
 
     getRowAndColNum(sel){
-        let row, col;
-        if(sel < 5) row = 0;
+        let row=1, col=1;
+        /*if(sel < 5) row = 0;
         else if(sel < 10) row = 1;
         else if(sel < 15) row = 2;
         else if(sel < 20) row = 3;
@@ -139,7 +139,7 @@ class Game extends React.Component {
             case 3: col = 3; break;
             case 4: col = 4; break;
             default: break;
-        }
+        }*/
 
         return [row, col];
     }
@@ -223,32 +223,32 @@ function calculateWinner(squares, xIsNext, selectedSquare) {
     }
 
     // lines 계산
-    for(let i = 0; i < squares.length; i++){
+    for(let i = 0; i < widthCnt; i++){
         for(let j = 0; j < widthCnt; j++){
-            const mx = widthCnt - 1;
+            const sqNumber = i * widthCnt + j;
 
-            // 가로줄
-            if(i % widthCnt === 0){
-                let winObj = [i, (i + (mx - 3)), (i + (mx - 2)), (i + (mx - 1)), (i + mx)];
+            // 가로
+            if((j + (widthCnt * i) + 4) <= widthCnt * (i + 1) - 1){
+                let winObj = [sqNumber, (sqNumber + 1), (sqNumber + 2), (sqNumber + 3), (sqNumber + 4)];
                 if(!includesArray(lines, winObj)) lines.push(winObj);
             }
             
-            // 세로줄
-            if(i < widthCnt){
-                let winObj = [i, (i + widthCnt), (i + (widthCnt * 2)), (i + (widthCnt * 3)), (i + (widthCnt * 4))];
+            // 세로
+            if((sqNumber + (widthCnt * 4)) < squares.length){
+                let winObj = [sqNumber, (sqNumber + widthCnt), (sqNumber + (widthCnt * 2)), (sqNumber + (widthCnt * 3)), (sqNumber + (widthCnt * 4))];
                 if(!includesArray(lines, winObj)) lines.push(winObj);
             }
-
+                    
             // 대각선 우하향
-            if((i + (widthCnt * mx) + mx) < squares.length){
-                let winObj = [i, (i + (widthCnt * (mx - 3)) + (mx - 3)), (i + (widthCnt * (mx - 2)) + (mx - 2)), (i + (widthCnt * (mx - 1)) + (mx - 1)), (i + (widthCnt * mx) + mx)];
+            if((sqNumber + (widthCnt * 4) + 4) < squares.length && i <= (widthCnt / 2) && j <= (widthCnt / 2)){
+                let winObj = [sqNumber, (sqNumber + widthCnt + 1), (sqNumber + (widthCnt * 2) + 2), (sqNumber + (widthCnt * 3) + 3), (sqNumber + (widthCnt * 4) + 4)];
                 if(!includesArray(lines, winObj)) lines.push(winObj);
             }
 
             // 대각선 좌하향
-            if(i === (squares.length - widthCnt)){
-               let winObj = [i, (i - (widthCnt * (mx - 3)) + (mx - 3)), (i - (widthCnt * (mx - 2)) + (mx - 2)), (i - (widthCnt * (mx - 1)) + (mx - 1)), (i - (widthCnt * mx) + mx)];
-               if(!includesArray(lines, winObj)) lines.push(winObj);
+            if((sqNumber + (widthCnt * 4) - 4) <= (squares.length - widthCnt) && i <= (widthCnt / 2) && j >= (widthCnt / 2 - 1)){
+                let winObj = [sqNumber, (sqNumber + widthCnt - 1), (sqNumber + (widthCnt * 2) - 2), (sqNumber + (widthCnt * 3) - 3), (sqNumber + (widthCnt * 4) - 4)];
+                if(!includesArray(lines, winObj)) lines.push(winObj);
             }
         }
     }

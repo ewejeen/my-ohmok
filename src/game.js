@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button } from '@material-ui/core';
 import Menu from './topMenu';
 import './game.css';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 // 각 사각형 렌더
 function Square(props){
@@ -134,21 +134,8 @@ function Game(props){
     }
 
     const getRowAndColNum = (sel) => {
-        let row=1, col=1;
-        /*if(sel < 5) row = 0;
-        else if(sel < 10) row = 1;
-        else if(sel < 15) row = 2;
-        else if(sel < 20) row = 3;
-        else if(sel < 25) row = 4;
-
-        switch(sel % 5){
-            case 0: col = 0; break;
-            case 1: col = 1; break;
-            case 2: col = 2; break;
-            case 3: col = 3; break;
-            case 4: col = 4; break;
-            default: break;
-        }*/
+        const row = parseInt(sel / level);
+        const col = parseInt(sel % level);
 
         return [row, col];
     }
